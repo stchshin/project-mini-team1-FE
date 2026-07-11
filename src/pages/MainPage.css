@@ -1,0 +1,41 @@
+.mainPage {
+    justify-content: center;
+    align-items: center;
+}
+
+.mainPage > div {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    word-break: keep-all;
+}
+
+.mainPage img {
+    width: 70%;
+}
+
+.mainPage > div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+}
+
+.mainPage > div > div > p:first-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.mainPage > div > div > p:last-child {
+    font-size: 0.95rem;
+    color: #767676;
+}
+
+.mainPage > div > div span {
+    color: #359AFF;
+    font-weight: 700;
+}

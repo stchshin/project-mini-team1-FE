@@ -1,0 +1,15 @@
+.sharePage {
+    display: block;
+}
+
+.sharePage div:last-child {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 5vh - 8rem);
+}
+
+.sharePage img {
+    width: 50%;
+}

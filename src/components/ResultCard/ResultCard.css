@@ -1,0 +1,100 @@
+.resultCard {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #EBEBEB;
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+}
+
+.resultCard div {
+    display: flex;
+}
+
+.firstRow, .secondRow {
+    justify-content: space-between;
+}
+
+.firstRow {
+    align-items: center;
+}
+
+.firstRow > div {
+    gap: 0.7rem;
+    align-items: center;
+}
+
+.station {
+    font-size: 1.1rem;
+}
+
+.lines {
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.65rem;
+    color: white;
+}
+
+.lines > div {
+    border: transparent;
+    border-radius: 12px;
+    background-color: #5498FF;
+    justify-content: center;
+    align-items: center;
+    padding: 0.3rem 0.5rem;
+}
+
+.recommended {
+    border: 1.5px solid #5498FF;
+    color: #5498FF;
+    font-weight: 590;
+    font-size: 0.75rem;
+    border-radius: 16px;
+    padding: 0.1rem 0.6rem;
+}
+
+.secondRow {
+    align-items: flex-end;
+}
+
+.secondRow > div {
+    gap: 1rem;
+}
+
+.secondRow > div > div {
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.thinner {
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+.secondRow button {
+    border: none;
+    background-color: transparent;
+}
+
+.resultDetail {
+    flex-direction: column;
+    gap: 0.9rem;
+    font-size: 0.95rem;
+    color: #838282;
+}
+
+.resultDetail > div {
+    display: flex;
+    gap: 1.4rem;
+    align-items: center;
+}
+
+.progressBar {
+    width: 55%;
+    background-color: #EBEBEB;
+    height: 4px;
+}
+
+.progress {
+    background-color: #838282;
+}

@@ -1,0 +1,10 @@
+.newPage h1 > span {
+    color: #5498FF;
+    font-weight: 700;
+}
+
+.newPage > form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

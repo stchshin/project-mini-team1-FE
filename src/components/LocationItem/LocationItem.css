@@ -1,0 +1,56 @@
+.location-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 14px;
+  font-family: 'Pretendard';
+  gap: 1.2rem;
+}
+
+.location-card > div {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.location-card > div > img {
+  object-fit: none;
+}
+
+.location-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #767676;
+  text-align: left;
+}
+
+.location-title {
+  font-size: 1rem;
+}
+
+.location-detail {
+  font-size: 0.8rem;
+}
+
+.location-card.selected {
+  box-shadow: 0 0 4px #5498FF;
+  border: solid 1px #549AFF;
+  background-color: #5498FF0F;
+}
+
+.location-card.selected .location-title {
+  color: #5498FF;
+  font-weight: 700;
+}
+
+.location-card > img {
+  display: none;
+}
+
+.location-card > .selectedIcon {
+  display: block;
+}

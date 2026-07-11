@@ -1,0 +1,92 @@
+.loadingPage {
+    gap: 1rem;
+    height: auto;
+}
+
+.loadingPage div, .loadingPage > div > div{
+    gap: 1rem;
+    color: #767676;
+}
+    
+.loadingPage > div > div > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.loadingPage > .circles {
+    flex-direction: row;
+    gap: 0.8rem;
+    height: auto;
+}
+
+.circle {
+    width: 0.7em;
+    height: 0.7rem;
+    background-color: #D6E6FF;
+    border-radius: 50%;
+    box-shadow: 0px 2px 4px 0px #0000001A;
+    animation: 3s change-colour infinite;
+}
+
+@keyframes change-colour {
+    from {
+        background-color: #D6E6FF;
+    }
+
+    33% {
+        background-color: #5498FF;
+    }
+}
+
+
+.resultPage {
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 1.2rem;
+}
+
+.resultPage::-webkit-scrollbar {
+    display: none;
+}
+
+.event {
+    background-color: #359AFF3B;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.check {
+    color: #5498FF;
+}
+
+.resultImage {
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.resultImage img {
+    width: 40%;
+}
+
+.resultImage h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.resultImage p {
+    color: #767676;
+    font-size: 0.8rem;
+}
+
+.resultCards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

@@ -1,0 +1,16 @@
+.participatePage > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.enterName {
+    border: 1.5px solid #5498FF;
+    background-color: #5498FF0F;
+    box-shadow: 0px 0px 4px 0px #5498FF;
+}
+
+.participatePage input {
+    border: none;
+    background-color: transparent;
+}
