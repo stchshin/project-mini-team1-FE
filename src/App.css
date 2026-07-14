@@ -69,6 +69,11 @@ html, body {
     flex-direction: column;
     justify-content: center;
     min-height: 0;
+    height: 100%;
+    overflow: auto;
+}
+
+.main:has(.mainPage, .sharePage, .loadingPage) {
     height: calc(100% - 5vh - 5rem - 4rem);
 }
 
@@ -100,14 +105,13 @@ html, body {
     padding: 1.5rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     width: 100%;
     position: absolute;
     bottom: 0;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 30.29%); 
+    gap: 1rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 30%);
 }
 
 .buttons > p {

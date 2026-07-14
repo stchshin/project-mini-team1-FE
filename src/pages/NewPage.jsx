@@ -13,12 +13,8 @@ export default function NewPage() {
     const selected = title.length > 0 && date.length > 0;
     const navigate = useNavigate();
 
-    function handleDateFocus() {
+    function handleDateClick() {
         setClicked(true);
-    }
-
-    function handleDateBlur() {
-        setClicked(false);
     }
 
     function handleTitleChange(e) {
@@ -53,11 +49,11 @@ export default function NewPage() {
             <div className="content newPage">
                 <div className="pageTitle">
                     <h1><span>새 약속</span> 시작하기</h1>
-                    <p>제목이랑 시간을 정하며 시작해볼까요?</p>
+                    <p>약속 이름과 날짜, 시간을 정하며 시작해볼까요?</p>
                 </div>
                 <form onSubmit={formSubmit} id="newEvent">
-                    <ScheduleList value={title} handleFunction={handleTitleChange} icon={icon_title} title={"제목"} placeholder={"제목을 입력해 주세요"} type={"text"} />
-                    <ScheduleList onFocus={handleDateFocus} onBlur={handleDateBlur} value={date} handleFunction={handleDateChange} icon={icon_date} title={"날짜"} placeholder={"날짜를 입력해 주세요"} type={clicked ? "datetime-local" : "text"} />
+                    <ScheduleList value={title} handleFunction={handleTitleChange} icon={icon_title} title={"약속명"} placeholder={"약속명을 입력해 주세요"} type={"text"} />
+                    <ScheduleList clicked={clicked} onClick={handleDateClick} value={date} handleFunction={handleDateChange} icon={icon_date} title={"날짜 / 시간"} type={"datetime-local"} />
                 </form>
             </div>
             <div className="buttons">

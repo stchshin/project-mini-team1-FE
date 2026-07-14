@@ -1,3 +1,7 @@
+.startPage {
+    padding-bottom: 5rem;
+}
+
 #searchForm {
     position: relative;
 }

@@ -12,7 +12,7 @@
 .appointment-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.5rem;
   width: 100%;
 }
 
@@ -22,11 +22,12 @@
 }
 
 .appointment-label {
-  font-size: 12px;
+  font-size: 0.8rem;
   color: #767676;
 }
 
-.appointment-value {
-  font-size: 16px;
+.appointment-value, .appointment-value::placeholder, .dateLabel {
+  font-size: 1rem;
   color: #767676; 
+  height: 1.1rem;
 }

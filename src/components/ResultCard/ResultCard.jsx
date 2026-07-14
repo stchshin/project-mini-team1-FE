@@ -30,8 +30,7 @@ export default function ResultCard({ result }) {
         </div>
         <div className='secondRow'>
             <div>
-                <div><span className='thinner'>이동시간</span> {result.totalTime}분</div>
-                <div><span className='thinner'>환승</span> {result.meanTransfer}회</div>
+                <div><span className='thinner'>평균 이동시간</span> {result.totalTime}분</div>
             </div>
             <button onClick={handleButtonClick}><img src={clicked ? icon_fold : icon_unfold} alt="icon_unfold" /></button>
         </div>
