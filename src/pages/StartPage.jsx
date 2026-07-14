@@ -2,9 +2,11 @@ import Button from "../components/Button/Button"
 import LocationItem from "../components/LocationItem/LocationItem"
 import './StartPage.css'
 import icon_cancel from '../assets/icon_cancel.png'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { mydata } from '../constants/locationData'
 import { useNavigate, useParams } from "react-router";
+import { searchLocation } from "../api/kakao";
+
 
 export default function StartPage() {
     const { eventId } = useParams();
@@ -12,6 +14,27 @@ export default function StartPage() {
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState(null);
     const navigate = useNavigate();
+    const [currentLocation, setCurrentLocation] = useState(null);
+
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setCurrentLocation({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+            },
+            (error) => {
+                console.log(error);
+                alert("위치 정보를 가져올 수 없습니다.");
+            }
+        );
+    }, []);
 
     function handleLocationInputChange(e) {
         setLocationInput(e.target.value);
@@ -28,12 +51,29 @@ export default function StartPage() {
             return;
         }
 
+        if (!currentLocation) {
+            alert("현재 위치를 불러오는 중입니다.");
+            return;
+        }
+
+
         try {
-            /*
-            const response = await fetch(url);
-            */
-            const response = {data: mydata}
-            setData(response.data);
+            const result = await searchLocation(locationInput, currentLocation);
+
+            console.log(result); 
+
+            const locations = result.map((item) => ({
+            id: item.id,
+            name: item.place_name,
+            address: item.road_address_name || item.address_name,
+            distance: `${(Number(item.distance) / 1000).toFixed(1)}km`,
+            x: item.x,
+            y: item.y,
+            isSubway: item.category_group_name === "지하철역"
+        }));
+
+            setData(locations);
+            setSelected(null);
         } catch(error) {
             console.log(error);
         }
@@ -82,7 +122,7 @@ export default function StartPage() {
                                 )
                             } else {
                                 return (
-                                    <LocationItem handleSelected={handleSelected} location={location} isSelected={false} />
+                                    <LocationItem key={location.id} handleSelected={handleSelected} location={location} isSelected={false} />
                                 )
                             }
                         })
