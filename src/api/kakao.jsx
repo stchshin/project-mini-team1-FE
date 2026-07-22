@@ -19,5 +19,3 @@ export async function searchLocation(keyword, currentLocation) {
 
   return response.data.documents;
 }
-
-console.log(REST_API_KEY);

@@ -8,7 +8,7 @@ export default function NewPage() {
     const navigate = useNavigate();
 
     function copyLink() {
-        const url = '참가 링크';
+        const url = `${window.location.origin}/participate/${eventId}`;
         navigator.clipboard.writeText(url);
     }
 

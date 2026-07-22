@@ -22,22 +22,6 @@
   color: #ffffff;
 }
 
-.participant-card:nth-child(1) .participant-avatar {
-  background-color: #acb4fe;
-}
-
-.participant-card:nth-child(2) .participant-avatar {
-  background-color: #5498ff;
-}
-
-.participant-card:nth-child(3) .participant-avatar {
-  background-color: #3e5ecf;
-}
-
-.participant-card:nth-child(4) .participant-avatar {
-  background-color: #3298b2;
-}
-
 .participant-info {
   display: flex;
   flex-direction: column;

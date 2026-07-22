@@ -5,6 +5,7 @@ import './NewPage.css'
 import icon_title from "../assets/icon_title.png"
 import icon_date from "../assets/icon_date.png"
 import { useNavigate } from "react-router"
+import axiosInstance from '../api/axiosInstance'
 
 export default function NewPage() {
     const [title, setTitle] = useState('');
@@ -30,18 +31,20 @@ export default function NewPage() {
         if (!selected) {
             return;
         }
-        const data = {
-            title: title,
-            date: date
+
+        try {
+            const response = await axiosInstance.post(
+                '/appointments',
+                {
+                    title: title,
+                    dateTime: date
+                }
+            )
+            const eventId = response.data.appointment_code;
+            navigate(`/share/${eventId}`)
+        } catch (error) {
+            console.log(error.response.data);
         }
-        /*
-        const result = await fetch('/api/newEvent', {
-            method: "POST",
-            body: JSON.stringify(data)
-        })
-        */
-        const result = {eventId: 1};
-        navigate(`/share/${result.eventId}`)
     }
 
     return (

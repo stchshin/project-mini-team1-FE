@@ -2,17 +2,18 @@ import Button from "../components/Button/Button"
 import LocationItem from "../components/LocationItem/LocationItem"
 import './StartPage.css'
 import icon_cancel from '../assets/icon_cancel.png'
-import { useState, useEffect } from 'react';
-import { mydata } from '../constants/locationData'
+import { useContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router";
 import { searchLocation } from "../api/kakao";
-
+import { EventContext } from "../App";
+import axiosInstance from "../api/axiosInstance";
 
 export default function StartPage() {
     const { eventId } = useParams();
+    const { nickname } = useContext(EventContext);
     const [locationInput, setLocationInput] = useState('');
     const [data, setData] = useState([]);
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState({id: null});
     const navigate = useNavigate();
     const [currentLocation, setCurrentLocation] = useState(null);
 
@@ -30,7 +31,7 @@ export default function StartPage() {
                 });
             },
             (error) => {
-                console.log(error);
+                console.log(error.response.data);
                 alert("위치 정보를 가져올 수 없습니다.");
             }
         );
@@ -40,7 +41,7 @@ export default function StartPage() {
         setLocationInput(e.target.value);
     }
 
-    function handleCancelInput(e) {
+    function handleCancelInput() {
         setLocationInput('');
         setData([]);
     }
@@ -51,56 +52,53 @@ export default function StartPage() {
             return;
         }
 
-        if (!currentLocation) {
-            alert("현재 위치를 불러오는 중입니다.");
-            return;
-        }
-
-
         try {
             const result = await searchLocation(locationInput, currentLocation);
 
-            console.log(result); 
-
             const locations = result.map((item) => ({
-            id: item.id,
-            name: item.place_name,
-            address: item.road_address_name || item.address_name,
-            distance: `${(Number(item.distance) / 1000).toFixed(1)}km`,
-            x: item.x,
-            y: item.y,
-            isSubway: item.category_group_name === "지하철역"
-        }));
+                id: item.id,
+                name: item.place_name,
+                address: item.road_address_name || item.address_name,
+                distance: `${(Number(item.distance) / 1000).toFixed(1)}km`,
+                x: item.x,
+                y: item.y,
+                isSubway: item.category_group_name === "지하철역"
+            }));
 
             setData(locations);
-            setSelected(null);
-        } catch(error) {
-            console.log(error);
+        } catch (error) {
+            console.log(error.response.data);
         }
 
-        setSelected(null);
+        setSelected({ id: null });
     }
 
     function handleSelected(e) {
-        setSelected(e.currentTarget.dataset.id);
+        setSelected({ id: e.currentTarget.dataset.id, name: e.currentTarget.dataset.name, x: e.currentTarget.dataset.x, y: e.currentTarget.dataset.y});
     }
 
     async function formSubmit(e) {
         e.preventDefault();
 
-        if (!selected) {
+        if (!selected.x || !selected.y) {
             return;
         }
-        const data = {
-            location: selected
+        
+        try {
+            await axiosInstance.post(
+                `/appointments/${eventId}/origins`,
+                {
+                    name: nickname,
+                    origin: selected.name,
+                    latitude: Number(Number(selected.y).toFixed(6)),
+                    longitude: Number(Number(selected.x).toFixed(6))
+                }
+            )
+
+            navigate(`/status/${eventId}`)
+        } catch (error) {
+            console.log(error.response.data);
         }
-        /*
-        const result = await fetch('/api/newEvent', {
-            method: "POST",
-            body: JSON.stringify(data)
-        })
-        */
-        navigate(`/status/${eventId}`)
     }
 
     return (
@@ -116,7 +114,7 @@ export default function StartPage() {
                 <form onSubmit={formSubmit} id="locationSubmit" className="locations">
                     {
                         data.map(function(location) {
-                            if (location.id == selected) {
+                            if (location.id == selected.id) {
                                 return (
                                     <LocationItem key={location.id} handleSelected={handleSelected} location={location} isSelected={true} />
                                 )
@@ -130,7 +128,7 @@ export default function StartPage() {
                 </form>
             </div>
             <div className="buttons">
-                <Button type={'submit'} form={'locationSubmit'} text={'이 출발지로 확정'} variant={selected ? 'blue' : 'gray'} />
+                <Button type={'submit'} form={'locationSubmit'} text={'이 출발지로 확정'} variant={selected.x || selected.y ? 'blue' : 'gray'} />
             </div>
         </div>
     )

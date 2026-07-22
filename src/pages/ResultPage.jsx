@@ -1,76 +1,65 @@
-import character_loading from "../assets/character_loading.png"
 import character_result from "../assets/character_result.png"
 import Button from "../components/Button/Button"
 import ResultCard from "../components/ResultCard/ResultCard"
 import './ResultPage.css'
-import { useEffect, useState } from "react"
+import { EventContext } from "../App"
+import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
-import { recommendationData } from "../constants/recommendationData"
+import axiosInstance from "../api/axiosInstance"
 
 export default function ResultPage() {
     const { eventId } = useParams();
-    const [loading, setLoading] = useState(true);
+    const { results } = useContext(EventContext);
     const [title, setTitle] = useState('');
     const [datetime, setDatetime] = useState('');
-    const [results, setResults] = useState([]);
+    const [newResults, setNewResults] = useState([]);
+
+    async function getInfo() {
+        try {
+            const response = await axiosInstance.get(
+                `/appointments/${eventId}/status`
+            )
+            setTitle(response.data.title);
+
+            const dateData = new Date(response.data.dateTime);
+            const dateFormat = dateData.toLocaleString('ko-KR', {
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })
+            setDatetime(dateFormat);
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+
+    async function getResults() {
+        try {
+            const response = await axiosInstance.get(
+                `/appointments/${eventId}/recommendations`
+            )
+            const sortedResults = [...response.data].sort((a, b) => (b.is_recommended ? 1 : 0) - (a.is_recommended ? 1 : 0));
+            setNewResults(sortedResults);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
-        async function getInfo() {
-            try {
-                /*
-                const response = await fetch(url);
-                */
-                const response = {title: "동아리 세션 후 회식🍻", datetime: "7월 22일 19:00"}
-                setTitle(response.title);
-                setDatetime(response.datetime);
-            } catch(error) {
-                console.log(error);
-            }
-        }
-
-        async function getResults() {
-            try {
-                /*
-                const response = await fetch(url);
-                */
-                const response = {data: recommendationData};
-                setResults(response.data);
-            } catch(error) {
-                console.log(error);
-            }
-        }
         getInfo();
-        getResults();
-        setLoading(false);
+        if (!results) {
+            getResults();
+        } else {
+            setNewResults(results);
+        }
     }, [eventId])
 
     function copyLink() {
-        const url = '결과 링크';
+        const url = window.location;
         navigator.clipboard.writeText(url);
-    }
-
-    if (loading) {
-        return (
-            <div className="main">
-                <div className="content mainPage loadingPage">
-                    <div>
-                        <img src={character_loading} alt="character_loading" />
-                        <div>
-                            <p><span>중간 지점</span>을 찾는 중</p>
-                            <div>
-                                <p>대중교통 이동시간을</p>
-                                <p>비교하고 있어요</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="circles">
-                        <div className="circle" style={{animationDelay: '0s'}}></div>
-                        <div className="circle" style={{animationDelay: '1s'}}></div>
-                        <div className="circle" style={{animationDelay: '2s'}}></div>
-                    </div>
-                </div>
-            </div>
-        )
     }
 
     return (
@@ -86,7 +75,7 @@ export default function ResultPage() {
                 </div>
                 <div className="resultCards">
                     {
-                        results.map(function(result) {
+                        newResults.map(function(result) {
                             return (
                                 <ResultCard result={result} />
                             )

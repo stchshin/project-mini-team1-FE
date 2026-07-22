@@ -1,10 +1,12 @@
 import Button from "../components/Button/Button"
 import ParticipantItem from "../components/ParticipantItem/ParticipantItem";
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import './ParticipatePage.css'
 import icon_profile from "../assets/icon_profile.png"
-import { participantData } from "../constants/participantData";
 import { useNavigate, useParams } from "react-router";
+import { EventContext } from "../App";
+import { profileData } from "../constants/profileData";
+import axiosInstance from '../api/axiosInstance'
 
 export default function ParticipatePage() {
     const { eventId } = useParams();
@@ -12,28 +14,27 @@ export default function ParticipatePage() {
     const [title, setTitle] = useState('');
     const [participants, setParticipants] = useState([]);
     const navigate = useNavigate();
+    const { setNickname } = useContext(EventContext);
 
     useEffect(() => {
         async function getTitle() {
             try {
-                /*
-                const response = await fetch(url);
-                */
-                const response = {title: "동아리 약속"}
-                setTitle(response.title);
-            } catch(error) {
+                const response = await axiosInstance.get(
+                    `/appointments/${eventId}/status`
+                )
+                setTitle(response.data.title);
+            } catch (error) {
                 console.log(error);
             }
         }
 
         async function getParticipants() {
             try {
-                /*
-                const response = await fetch(url);
-                */
-               const response = {data: participantData};
+                const response = await axiosInstance.get(
+                    `/appointments/${eventId}/origins`
+                )
                setParticipants(response.data);
-            } catch(error) {
+            } catch (error) {
                 console.log(error);
             }
         }
@@ -50,15 +51,7 @@ export default function ParticipatePage() {
         if (!name) {
             return;
         }
-        const data = {
-            nickname: name
-        }
-        /*
-        const result = await fetch('/api/newEvent', {
-            method: "POST",
-            body: JSON.stringify(data)
-        })
-        */
+        setNickname(name);
         navigate(`/start/${eventId}`)
     }
 
@@ -81,7 +74,8 @@ export default function ParticipatePage() {
                     </div>
                     {
                         participants.map(function(participant) {
-                            return (<ParticipantItem name={participant.name} station={"참여 완료"} />)
+                            const colour = profileData[participants.indexOf(participant) % 4];
+                            return (<ParticipantItem colour={colour} name={participant.name} station={"참여 완료"} />)
                         })
                     }
                 </div>

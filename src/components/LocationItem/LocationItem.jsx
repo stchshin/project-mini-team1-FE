@@ -5,7 +5,7 @@ import icon_subway from '../../assets/icon_subway.png'
 
 export default function LocationItem({ handleSelected, location, isSelected }) {
   return (
-    <button data-id={location.id} type='button' className={`location-card ${isSelected ? 'selected' : ''}`} onClick={handleSelected} >
+    <button data-id={location.id} data-name={location.name} data-x={location.x} data-y={location.y} type='button' className={`location-card ${isSelected ? 'selected' : ''}`} onClick={handleSelected} >
         <div>
           <img
       src={location.isSubway ? icon_subway : icon_location}

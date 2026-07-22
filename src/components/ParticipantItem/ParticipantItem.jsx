@@ -1,11 +1,11 @@
 import './ParticipantItem.css';
 
-export default function ParticipantItem({ name, station }) {
+export default function ParticipantItem({ colour, name, station }) {
   const initial = name ? name.charAt(0) : '';
 
   return (
     <div className="participant-card">
-      <div className="participant-avatar">
+      <div className="participant-avatar" style={{backgroundColor: colour}}>
         {initial}
       </div>
       <div className="participant-info">

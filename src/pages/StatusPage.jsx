@@ -1,67 +1,93 @@
 import Button from "../components/Button/Button"
 import ParticipantItem from "../components/ParticipantItem/ParticipantItem";
 import Popup from "../components/Popup/Popup";
-import { useEffect, useState } from "react";
+import character_loading from "../assets/character_loading.png"
+import { useContext, useEffect, useState } from "react";
 import './StatusPage.css'
+import { profileData } from "../constants/profileData";
+import { EventContext } from "../App";
 import { useNavigate, useParams } from "react-router";
-import { participantData } from "../constants/participantData";
+import axiosInstance from "../api/axiosInstance";
 
 export default function StatusPage() {
     const { eventId } = useParams();
     const navigate = useNavigate();
+    const { setResults } = useContext(EventContext);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [popup, setPopup] = useState(false);
     const [participantStatus, setParticipantStatus] = useState([]);
-    const [ready, setReady] = useState(false);
 
     useEffect(() => {
         async function getParticipantStatus() {
             try {
-                /*
-                const response = await fetch(url);
-                */
-               const response = {data: participantData, ready: 'ready'};
-               if (response.ready == 'ready') {
-                    setReady(true);
-                }
-               setParticipantStatus(response.data);
+                const response = await axiosInstance.get(
+                    `/appointments/${eventId}/origins`
+                )
+                
+                setParticipantStatus(response.data);
             } catch(error) {
-                console.log(error);
+                console.log(error.response.data);
             }
         }
-
-        if (ready) {
-            return;
-        }
-
+    
         getParticipantStatus();
-        const interval = setInterval(getParticipantStatus, 3000);
-        return () => clearInterval(interval);
-    }, [eventId])
+
+        if (!loading) {
+            const interval = setInterval(getParticipantStatus, 3000);
+            return () => clearInterval(interval);
+        }
+    }, [eventId, loading])
 
     async function readyButtonClick() {
-        if (!ready) {
-            setError('notReady');
-            setPopup(true);
-            return;
-        }
-
-        /*
-        const response = await fetch(url);
-        */
-        const response = { startedAlready: false }
-        
-        if (response.startedAlready) {
-            setError('startedAlready');
-            setPopup(true);
-        } else {
-            navigate(`/result/${eventId}`)
+        try {
+            setLoading(true);
+            const response = await axiosInstance.post(
+                `/appointments/${eventId}/recommendations`
+            )  
+            
+            if (response.status == 200) {
+                setLoading(false);
+                setResults(response.data.recommendations);
+                navigate(`/result/${eventId}`)
+            } else {
+                setLoading(false);
+                console.log(response.data);
+            }
+        } catch (error) {
+            if (error.response.status == 409) {
+                setError(true);
+            }
+            console.log(error.response.data);
         }
     }
 
+    if (loading) {
+            return (
+                <div className="main">
+                    <div className="content mainPage loadingPage">
+                        <div>
+                            <img src={character_loading} alt="character_loading" />
+                            <div>
+                                <p><span>중간 지점</span>을 찾는 중</p>
+                                <div>
+                                    <p>대중교통 이동시간을</p>
+                                    <p>비교하고 있어요</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="circles">
+                            <div className="circle" style={{animationDelay: '0s'}}></div>
+                            <div className="circle" style={{animationDelay: '1s'}}></div>
+                            <div className="circle" style={{animationDelay: '2s'}}></div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
     return (
         <div className="main">
-            <Popup visibility={popup} error={error} setPopup={setPopup} />
+            <Popup visibility={error} />
             <div className="content participatePage">
                 <div className="pageTitle">
                     <h1>출발지 입력 현황</h1>
@@ -69,13 +95,14 @@ export default function StatusPage() {
                 <div>
                     {
                         participantStatus.map(function(participant) {
-                            return (<ParticipantItem name={participant.name} station={participant.station} />)
+                            const colour = profileData[participantStatus.indexOf(participant) % 4];
+                            return (<ParticipantItem colour={colour} name={participant.name} station={participant.origin} />)
                         })
                     }
                 </div>
             </div>
             <div className="buttons">
-                <Button onClick={readyButtonClick} variant={ready ? 'blue' : 'gray'} text={'추천 시작'} />
+                <Button onClick={readyButtonClick} variant={'blue'} text={'추천 시작'} />
             </div>
         </div>
     )
